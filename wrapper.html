@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ricardo Pearce | Core Network Engineer</title>
+  <style>
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#07100d}
+    iframe{display:block;width:100%;height:100%;border:0}
+  </style>
+</head>
+<body>
+  <iframe id="portfolio" src="/index.html" title="Ricardo Pearce portfolio"></iframe>
+  <script>
+    const frame = document.getElementById('portfolio');
+    frame.addEventListener('load', () => {
+      const doc = frame.contentDocument || frame.contentWindow.document;
+      const printButton = Array.from(doc.querySelectorAll('.nav-actions button')).find(btn => btn.textContent.trim() === 'Print CV');
+      if (printButton) {
+        const downloadLink = doc.createElement('a');
+        downloadLink.className = printButton.className;
+        downloadLink.href = '/Ricardo_Pearce_CV.pdf';
+        downloadLink.download = 'Ricardo_Pearce_CV.pdf';
+        downloadLink.textContent = 'Download CV';
+        printButton.replaceWith(downloadLink);
+      }
+    });
+  </script>
+</body>
+</html>
