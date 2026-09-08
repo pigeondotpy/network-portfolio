@@ -24,6 +24,8 @@
         downloadLink.textContent = 'Download CV';
         printButton.replaceWith(downloadLink);
       }
+      const goSkill = Array.from(doc.querySelectorAll('#depth .skillline')).find(row => row.querySelector('span')?.textContent.trim() === 'Go');
+      if (goSkill) goSkill.remove();
     });
   </script>
 </body>
