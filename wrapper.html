@@ -28,6 +28,14 @@
       if (goSkill) goSkill.remove();
       const nmsPrototype = Array.from(doc.querySelectorAll('#automation article.card')).find(card => card.querySelector('h3')?.textContent.trim() === 'NMS prototype');
       if (nmsPrototype) nmsPrototype.remove();
+      Array.from(doc.querySelectorAll('#stack .stack')).forEach(card => {
+        if (/\bGo\b/i.test(card.textContent)) card.remove();
+      });
+      Array.from(doc.querySelectorAll('body *')).forEach(el => {
+        if (el.children.length === 0 && /\bGo\b/i.test(el.textContent)) {
+          el.textContent = el.textContent.replace(/\bGo\b\s*\/?\s*/gi, '').replace(/\s{2,}/g, ' ').trim();
+        }
+      });
     });
   </script>
 </body>
