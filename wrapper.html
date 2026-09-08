@@ -26,18 +26,30 @@
         printButton.replaceWith(downloadLink);
       }
 
-      const goSkill = Array.from(doc.querySelectorAll('#depth .skillline')).find(row => row.querySelector('span')?.textContent.trim() === 'Go');
-      if (goSkill) goSkill.remove();
+      const heroEyebrow = doc.querySelector('.hero .eyebrow');
+      if (heroEyebrow) heroEyebrow.innerHTML = '<span class="dot"></span> Portuguese EU Citizen · Relocating to the Netherlands · Full EU Work Rights · No Sponsorship Required';
+      const heroP = doc.querySelector('.hero p');
+      if (heroP) heroP.textContent = 'ISP core network engineer focused on routing, peering, automation, data centre infrastructure, SD WAN, network security, wireless and observability. Hands on across Juniper and Fortinet platforms, BGP, OSPF and production change work.';
 
-      Array.from(doc.querySelectorAll('#automation article.card')).forEach(card => {
-        if (card.querySelector('h3')?.textContent.trim() === 'NMS prototype') card.remove();
+      Array.from(doc.querySelectorAll('#stack .stack')).forEach(card => { if (/\bGo\b/i.test(card.textContent)) card.remove(); });
+      Array.from(doc.querySelectorAll('#automation article.card')).forEach(card => { if (/NMS prototype/i.test(card.textContent)) card.remove(); });
+      Array.from(doc.querySelectorAll('#projects article.project')).forEach(card => { if (/Go based NMS prototype/i.test(card.textContent)) card.remove(); });
+      Array.from(doc.querySelectorAll('#depth .skillline')).forEach(row => { if (/^Go$/i.test(row.querySelector('span')?.textContent.trim() || '')) row.remove(); });
+
+      const depthIntro = doc.querySelector('#depth .section-head p');
+      if (depthIntro) depthIntro.textContent = 'A practical view of the technologies I use in production and the areas where I have hands on engineering experience.';
+      Array.from(doc.querySelectorAll('#depth .skillline')).forEach(row => {
+        const label = row.querySelector('span:last-child');
+        if (label) label.remove();
       });
-      Array.from(doc.querySelectorAll('#stack .stack')).forEach(card => {
-        if (/\bGo\b/i.test(card.textContent)) card.remove();
-      });
-      Array.from(doc.querySelectorAll('#projects article.project')).forEach(card => {
-        if (/Go based NMS prototype/i.test(card.textContent)) card.remove();
-      });
+      const growing = Array.from(doc.querySelectorAll('#depth .exposure-col')).find(col => col.querySelector('h3')?.textContent.trim() === 'Growing depth');
+      if (growing) growing.querySelector('h3').textContent = 'Additional experience';
+
+      const saicom = Array.from(doc.querySelectorAll('#experience article.role')).find(role => role.querySelector('.company')?.textContent.trim() === 'Saicom');
+      if (saicom) {
+        const ul = saicom.querySelector('ul');
+        if (ul) ul.innerHTML = '<li>Operate and evolve production ISP core infrastructure, with hands on responsibility for Juniper routing, BGP policy, internet peering, OSPF, BFD, VRRP and service availability.</li><li>Own complex incident investigation across the routing and transport stack, using protocol state, telemetry, logs and path testing to isolate faults and restore stable service.</li><li>Plan and execute high risk production changes including core migrations, peering changes, regional link upgrades, POP and data centre deployments, switch refreshes and routing policy changes.</li><li>Work directly with internet exchange and upstream connectivity, route advertisement and aggregation, IPv4 and IPv6 routing, and improvements to convergence and failover behaviour.</li><li>Support and troubleshoot Fortinet SD WAN, ADVPN and HA environments while developing operational tooling, telemetry and monitoring improvements.</li><li>Currently strengthening anti DDoS capabilities through improved traffic visibility, detection and mitigation approaches including BGP FlowSpec and upstream mitigation options.</li>';
+      }
 
       const routingIncident = Array.from(doc.querySelectorAll('#projects article.project')).find(card => card.querySelector('h3')?.textContent.trim() === 'Core router BGP and BFD outage');
       if (routingIncident) {
@@ -53,8 +65,6 @@
         if (p) p.textContent = 'Stood up switching infrastructure for a new data centre, initially configuring Cisco Nexus before the platform was replaced with Arista switching. Worked through Layer 2 design, LACP and deployment troubleshooting.';
         const tags = dcProject.querySelector('.tagrow');
         if (tags) tags.innerHTML = '<span class="tag">Arista</span><span class="tag">Cisco Nexus</span><span class="tag">LACP</span><span class="tag">Data Centre</span>';
-        const metric = dcProject.querySelector('.metric span:last-child');
-        if (metric) metric.textContent = 'Data centre stand up · switching · resilience';
       }
 
       const ddosProject = Array.from(doc.querySelectorAll('#projects article.project')).find(card => card.querySelector('h3')?.textContent.trim() === 'DDoS mitigation pipeline');
@@ -63,15 +73,14 @@
         if (p) p.textContent = 'Currently strengthening Saicom\'s anti DDoS capabilities, evaluating traffic visibility, detection and mitigation approaches including FlowSpec and upstream mitigation options.';
         const tags = ddosProject.querySelector('.tagrow');
         if (tags) tags.innerHTML = '<span class="tag">DDoS</span><span class="tag">FlowSpec</span><span class="tag">BGP</span><span class="tag">Traffic Analysis</span>';
-        const metric = ddosProject.querySelector('.metric span:last-child');
-        if (metric) metric.textContent = 'Detection · mitigation · operational resilience';
       }
+
+      const certs = doc.querySelector('#certs .certs');
+      if (certs) certs.innerHTML = '<div class="cert"><b>Cisco CCNP ENCOR</b><span>Enterprise Core networking</span><div class="status">COMPLETED</div></div><div class="cert"><b>Juniper JNCIP-SP</b><span>Service Provider Routing and Switching</span><div class="status">COMPLETED</div></div><div class="cert"><b>Juniper JNCIS-ENT</b><span>Enterprise Routing and Switching</span><div class="status">COMPLETED</div></div><div class="cert"><b>CCIE Enterprise Infrastructure</b><span>Lab preparation in progress</span><div class="status">IN PROGRESS</div></div><div class="cert"><b>Fortinet FCA</b><span>Fortinet fundamentals and product knowledge</span><div class="status">COMPLETED</div></div><div class="cert"><b>Fortinet FCP Network Security</b><span>Network security track</span><div class="status">IN PROGRESS</div></div>';
 
       Array.from(doc.querySelectorAll('body *')).forEach(el => {
         if (el.children.length === 0 && /address family mismatch|AFI mismatch/i.test(el.textContent)) {
-          el.textContent = el.textContent
-            .replace(/Peer configuration reveals an address family mismatch adding unnecessary protocol behaviour\.?/gi, 'Compare routing state, transport behaviour and peer configuration against the expected design.')
-            .replace(/an AFI mismatch between iBGP peers/gi, 'routing and transport behaviour');
+          el.textContent = el.textContent.replace(/Peer configuration reveals an address family mismatch adding unnecessary protocol behaviour\.?/gi, 'Compare routing state, transport behaviour and peer configuration against the expected design.').replace(/an AFI mismatch between iBGP peers/gi, 'routing and transport behaviour');
         }
       });
     });
