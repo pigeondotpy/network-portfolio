@@ -26,6 +26,8 @@
       }
       const goSkill = Array.from(doc.querySelectorAll('#depth .skillline')).find(row => row.querySelector('span')?.textContent.trim() === 'Go');
       if (goSkill) goSkill.remove();
+      const nmsPrototype = Array.from(doc.querySelectorAll('#automation article.card')).find(card => card.querySelector('h3')?.textContent.trim() === 'NMS prototype');
+      if (nmsPrototype) nmsPrototype.remove();
     });
   </script>
 </body>
