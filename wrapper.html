@@ -15,6 +15,7 @@
     const frame = document.getElementById('portfolio');
     frame.addEventListener('load', () => {
       const doc = frame.contentDocument || frame.contentWindow.document;
+
       const printButton = Array.from(doc.querySelectorAll('.nav-actions button')).find(btn => btn.textContent.trim() === 'Print CV');
       if (printButton) {
         const downloadLink = doc.createElement('a');
@@ -24,16 +25,53 @@
         downloadLink.textContent = 'Download CV';
         printButton.replaceWith(downloadLink);
       }
+
       const goSkill = Array.from(doc.querySelectorAll('#depth .skillline')).find(row => row.querySelector('span')?.textContent.trim() === 'Go');
       if (goSkill) goSkill.remove();
-      const nmsPrototype = Array.from(doc.querySelectorAll('#automation article.card')).find(card => card.querySelector('h3')?.textContent.trim() === 'NMS prototype');
-      if (nmsPrototype) nmsPrototype.remove();
+
+      Array.from(doc.querySelectorAll('#automation article.card')).forEach(card => {
+        if (card.querySelector('h3')?.textContent.trim() === 'NMS prototype') card.remove();
+      });
       Array.from(doc.querySelectorAll('#stack .stack')).forEach(card => {
         if (/\bGo\b/i.test(card.textContent)) card.remove();
       });
+      Array.from(doc.querySelectorAll('#projects article.project')).forEach(card => {
+        if (/Go based NMS prototype/i.test(card.textContent)) card.remove();
+      });
+
+      const routingIncident = Array.from(doc.querySelectorAll('#projects article.project')).find(card => card.querySelector('h3')?.textContent.trim() === 'Core router BGP and BFD outage');
+      if (routingIncident) {
+        const p = routingIncident.querySelector('p');
+        if (p) p.textContent = 'Investigated BGP and BFD instability within the ISP core, using protocol state, logs and path testing to isolate routing and transport behaviour affecting adjacency stability.';
+        const metric = routingIncident.querySelector('.metric span:last-child');
+        if (metric) metric.textContent = 'Protocol state · logs · path testing';
+      }
+
+      const dcProject = Array.from(doc.querySelectorAll('#projects article.project')).find(card => card.querySelector('h3')?.textContent.trim() === 'New data centre deployment');
+      if (dcProject) {
+        const p = dcProject.querySelector('p');
+        if (p) p.textContent = 'Stood up switching infrastructure for a new data centre, initially configuring Cisco Nexus before the platform was replaced with Arista switching. Worked through Layer 2 design, LACP and deployment troubleshooting.';
+        const tags = dcProject.querySelector('.tagrow');
+        if (tags) tags.innerHTML = '<span class="tag">Arista</span><span class="tag">Cisco Nexus</span><span class="tag">LACP</span><span class="tag">Data Centre</span>';
+        const metric = dcProject.querySelector('.metric span:last-child');
+        if (metric) metric.textContent = 'Data centre stand up · switching · resilience';
+      }
+
+      const ddosProject = Array.from(doc.querySelectorAll('#projects article.project')).find(card => card.querySelector('h3')?.textContent.trim() === 'DDoS mitigation pipeline');
+      if (ddosProject) {
+        const p = ddosProject.querySelector('p');
+        if (p) p.textContent = 'Currently strengthening Saicom\'s anti DDoS capabilities, evaluating traffic visibility, detection and mitigation approaches including FlowSpec and upstream mitigation options.';
+        const tags = ddosProject.querySelector('.tagrow');
+        if (tags) tags.innerHTML = '<span class="tag">DDoS</span><span class="tag">FlowSpec</span><span class="tag">BGP</span><span class="tag">Traffic Analysis</span>';
+        const metric = ddosProject.querySelector('.metric span:last-child');
+        if (metric) metric.textContent = 'Detection · mitigation · operational resilience';
+      }
+
       Array.from(doc.querySelectorAll('body *')).forEach(el => {
-        if (el.children.length === 0 && /\bGo\b/i.test(el.textContent)) {
-          el.textContent = el.textContent.replace(/\bGo\b\s*\/?\s*/gi, '').replace(/\s{2,}/g, ' ').trim();
+        if (el.children.length === 0 && /address family mismatch|AFI mismatch/i.test(el.textContent)) {
+          el.textContent = el.textContent
+            .replace(/Peer configuration reveals an address family mismatch adding unnecessary protocol behaviour\.?/gi, 'Compare routing state, transport behaviour and peer configuration against the expected design.')
+            .replace(/an AFI mismatch between iBGP peers/gi, 'routing and transport behaviour');
         }
       });
     });
